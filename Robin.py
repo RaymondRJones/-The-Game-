@@ -1,6 +1,8 @@
 class Robin:
     lifePoints = 20
     destroyedCards = []
+    hazardDeck = []
+    agingDeck = []
     missionCards = []
     hazardDiscards = []
     fightDeckDiscards = []
@@ -15,7 +17,7 @@ def shuffle(cards):
     #d
 
 
-#Displays reward/ability and it's description
+#Displays reward/ability and its description
 
 def getReward(reward):
     pass
@@ -43,7 +45,16 @@ def createHazards():
 #Creates fightCards with their constructors to be played in the game
 #Returns array filled with starting fightCards
 def createFightCardsDeck():
-    pass
+    fightDeck = []
+    for i in range(0, 8):
+        fightDeck.append(Weak())
+    for i in range(0,5):
+        fightDeck.append(Distracted())
+    for i in range(0,3):
+        fightDeck.append(Focused())
+    fightDeck.append(Genius())
+    fightDeck.append(Eating())
+
     #
 #Creates Deck filled with Aging cards that must be drawn
 def createAgingDeck():
@@ -107,16 +118,16 @@ class Distracted(FightCard):
         super().__init__(name, fightScore)
         self.ability = ability
 class Stupid(FightCard):
-    def __init__(self, name, fightScore, ability):
+    def __init__(self, name = "very stupid", fightScore = -3, ability = "none"):
         super().__init__(name,fightScore)
         self.ability = ability
 #3
 class Focused(FightCard):
-    def __init__(self,name, fightScore,ability):
+    def __init__(self,name = "focused", fightScore = 1,ability = "none"):
         super().__init__(name, fightScore, ability)
 #1
 class Genius(FightCard):
-    def __init__(self,name, fightScore,ability):
+    def __init__(self,name = "genius", fightScore = 2,ability = "none"):
         super().__init__(name, fightScore, ability)
 class Eating(FightCard):
     def __init__(self, name="eating", fightScore=0, ability="+2 Life"):
@@ -156,10 +167,13 @@ class Hazard:
             freshCard = FightCard(self.reward, 1, self.reward)
         elif(self.name == "further explore"):
             freshCard = FightCard(self.reward, 2, self.reward)
-        elif(self.name == "explore"):
+        elif(self.name == "wild animal"):
             freshCard = FightCard(self.reward, 3, self.reward)
-        elif(self.name == "explore"):
+        elif(self.name == "cannibals"):
             freshCard = FightCard("weapon", 4, "none")
+        else:
+            freshCard = "error"
+        return freshCard
     #Increases alert level by 1
     def increaseAlert(self):
         pass
@@ -198,8 +212,45 @@ class Pirates(Hazard):
         super().__init__(name,diffScore,Reward, alertLevel)
 
 
-raft1 = Raft("jimmy", "strategy", 0)
-print(raft1.yellowScore)
+print("Building Deck...")
+#For Loop to Create Starting Robin Deck
+fightDeck = createFightCardsDeck()
+print(fightDeck)
+#Creates 10 different Raft Cards
+raft1 = Raft("Raft", "strategy", 0)
+raft2 = Raft("Raft", "strategy", 0)
+raft3 = Raft("Raft", "strategy", 0)
+raft4 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+raft1 = Raft("Raft", "strategy", 0)
+#Creates 8 different Explore Cards
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+explore1 = Explore("Explore", "strategy", 0)
+
+#Creates 6 different Further Explore Cards
+FurtherExplore("Further Explore", "vision", 0)
+FurtherExplore("Further Explore", "vision", 0)
+FurtherExplore("Further Explore", "vision", 0)
+FurtherExplore("Further Explore", "vision", 0)
+FurtherExplore("Further Explore", "vision", 0)
+FurtherExplore("Further Explore", "vision", 0)
+#Creates 4 different Animal Cards
+WildAnimal("Wild Animal", "vision", 0)
+#Creates 2 Cannibal Cards
+Cannibals("Cannibals", "Weapon", 0)
+Cannibals("Cannibals", "Weapon", 0)
+print(raft1.reward)
 weakCard1 = Weak()
 hungry1 = FightCard("Hungry", 0, "Hungry")
 print(weakCard1.name)
