@@ -71,21 +71,33 @@ class FightCard:
     #checks names and details card ability
     def checkAbility(self):
     #Checks cards ability and performs action
+        if(self.ability == "food"):
+            print("Food: Restores 1 life point")
         if(self.ability == "eating"):
-            print("Eating: Restores 1 life point")
+            print("Food: Restores 2 life point")
         elif(self.ability == "realization"):
             print("realization, destroy one card from mission")
         elif(self.ability == "vision"):
             print("vision, Draw 3 cards, sort them, put at top of deck")
         elif(self.ability == "mimicry"):
-            print("Copy one cards fight score")
-            #1 fight score
+            print("Copy one cards ability")
+        elif(self.ability == "equipment"):
+            print("Draw 2 cards")
+        elif(self.ability == "weapon"):
+            print("No Effect")
+        elif(self.ability == "repeat"):
+            print("double fight score")
+        elif(self.ability == "book"):
+            print("???")
+        elif(self.ability == "strategy"):
+            print("Exchange two cards from mission and deck")
+        elif(self.ability == "phase"):
+            print("Drop down phase for mission")
         elif(self.ability == "experience"):
             print("Plus one Card")
             print("Two fight Score")
-        #books phase
-        #5 9 12
-        #8 5 2
+        else:
+            print("There seems to be a mistake")
     def useAbility(self, Robin):
         if (self.ability == "eating"):
             Robin.lifePoints += 1
@@ -127,8 +139,11 @@ class Aging:
         self.name = name
         self.diffScore = fightScore
         self.ability = ability
-class suicidal(Aging):
+class Suicidal(Aging):
     def __init__(self, name, fightScore):
+        super().__init__(name,fightScore)
+class Stupid(Aging):
+    def __init__(self, name, fightScore = -2):
         super().__init__(name,fightScore)
 
 class Hazard:
@@ -174,7 +189,7 @@ class Cannibals(Hazard):
 class WildAnimal(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=4, yellowScore=7, redScore=11, drawCount=4):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
-        self.name = "wild"
+        self.name = "Wild Animal"
         self.reward = reward
         self.alertLevel = alertLevel
 class FurtherExplore(Hazard):
@@ -198,6 +213,49 @@ class Raft(Hazard):
 class Pirates(Hazard):
     def __init__(self, name, diffScore, Reward,alertLevel):
         super().__init__(name,diffScore,Reward, alertLevel)
+def displayFightCard(card):
+    print("Name: ", card.name, "Score: ", card.fightScore, "Ability: ", card.ability)
+def displayHazard(card):
+    print("Discovery!", card.name, "gives you: ", card.reward, "Score to defeat: ", card.greenScore, "Available draws: ",card.drawCount)
+def startHazard(cards, discards):
+    print("Life Points: ", robin.lifePoints)
+    displayHazard(cards[0])
+    displayHazard(cards[1])
+    choice = int(input("Which Hazard do you want, 1 or 2?"))
+    if (choice == 1):
+        #Start mission using card of choice
+        #Stores unused card into discard pile
+        startMission(drawHazardCard(cards,discards))
+        #Draws other card from deck and puts into discards
+        drawHazardCard(cards,discards)
+    else:
+        drawHazardCard(cards,discards)
+#COMMENTED OUT UNTIL I FIX
+        #startMission(drawHazardCard(cards,discards))
+    # Function to start the mission
+#NEEDS FUNCTIONS TO CHECK DRAW COUNT, NEEDS FUNCTIONS TO CALCULATE LIFE
+def startMission(card, fightDeck, fightDeckDiscards):
+    while(True):
+        choice = int(input("1.)Draw a card  2.) Concede Battle"))
+        if(choice == 1):
+            drawFightCard(fightDeck, fightDeckDiscards)
+            displayFightCard()
+        # Draw card from fight deck and put into mission list
+        # Display needed fightscore to win, hazard.fightscore - cardfightscore
+        elif(choice == 2):
+            pass
+            #loseLife()
+            # -> Display MissionList Array
+            choice2 = int(input("Enter number of card you want to destroy"))
+        # If they concede, Ask to choose cards to burn from mission cards
+        # Subtract from their lifepoints the hazard.fightscore - total_fightscore
+        # if Difference Score is negative, they win if they concede
+        # Convert Hazard into FightCard
+        # Add FightCard into their discard pile
+        # Print you won statement
+        else:
+            print("oops")
+
 #Creates fightCards with their constructors to be played in the game
 #Returns array filled with starting fightCards
 def createFightCardsDeck():
@@ -241,7 +299,7 @@ def createHazardsDeck():
     furtherExplore1 = FurtherExplore("Further Explore", "realization", 0)
     furtherExplore2 = FurtherExplore("Further Explore", "experience", 0)
     furtherExplore3 = FurtherExplore("Further Explore", "food", 0)
-    furtherExplore4 = FurtherExplore("Further Explore", "???Happy", 0)
+    furtherExplore4 = FurtherExplore("Further Explore", "vision", 0)
     furtherExplore5 = FurtherExplore("Further Explore", "repeat", 0)
     furtherExplore6 = FurtherExplore("Further Explore", "strategy", 0)
     # Creates 4 different Animal Cards
@@ -276,23 +334,7 @@ while(True):
     choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
-        print("Life Points: ", robin.lifePoints)
-        print(drawHazardCard(hazardsDeck, hazardDiscards).reward)
-        print(drawHazardCard(hazardsDeck, hazardDiscards).reward)
-        print("Choose a Hazard for him to face")
-        #Print Hazard Cards name, effect, drawcount, Reward
-        #Ask which card they pick
-        #FightStarted = True
-        #if they want to draw card, enter 1
-            #Draw card from fight deck and put into mission list
-            #Read Card name and ability and fight score
-            #Display needed fightscore to win, hazard.fightscore - cardfightscore
-            #If they concede, Ask to choose cards to burn from mission cards
-            #Subtract from their lifepoints the hazard.fightscore - total_fightscore
-        #if Difference Score is negative, they win if they concede
-        #Convert Hazard into FightCard
-        #Add FightCard into their discard pile
-        #Print you won statement
+       startHazard(hazardsDeck, hazardDiscards)
 
     elif(choice == 2):
         pass
