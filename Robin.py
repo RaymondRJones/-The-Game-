@@ -1,11 +1,15 @@
+import random
+
+destroyedCards = []
+hazardDeck = []
+agingDeck = []
+missionCards = []
+hazardDiscards = []
+fightDeckDiscards = []
+
 class Robin:
     lifePoints = 20
-    destroyedCards = []
-    hazardDeck = []
-    agingDeck = []
-    missionCards = []
-    hazardDiscards = []
-    fightDeckDiscards = []
+
     def __init__(self):
         self.lifePoints = 20
 
@@ -13,22 +17,27 @@ class Robin:
 
 #Shuffles deck of cards
 def shuffle(cards):
-    pass
-    #d
+    random.shuffle(cards)
+    return cards
 
-
-#Displays reward/ability and its description
-
-def getReward(reward):
-    pass
+#Draws a card from a deck of cards
+#Removes card from deck
+def drawHazardCard(cards, hazardDiscards):
+    drawnCard = cards[0]
+    hazardDiscards.append(drawnCard)
+    cards.pop(0)
+    return drawnCard
+def drawFightCard(cards, fightDiscards):
+    drawnCard = cards[0]
+    fightDiscards.append(drawnCard)
+    cards.pop(0)
+    return drawnCard
 
 #Places card into pile to be discarded and eventually added back into deck
 def discard(card):
     pass
-
-#Draws a card from a deck of cards
-def drawCard(cards):
-    pass
+    #fightDeckDiscards.append()
+    #fightDeck.erase(
 
 #removes card from game existence from array
 def burnCard(cards):
@@ -254,41 +263,38 @@ print("Building Deck...")
 #For Loop to Create Starting Robin Deck
 fightDeck = createFightCardsDeck()
 hazardsDeck = createHazardsDeck()
-print(len(fightDeck))
-print(len(hazardsDeck))
-print(hazardsDeck[1].reward)
-weakCard1 = Weak()
-hungry1 = FightCard("Hungry", 0, "Hungry")
-print(weakCard1.name)
-#print(weakCard1.fightScore)
-#print(hungry1.fightScore)
-print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
-print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
+shuffle(fightDeck)
+shuffle(hazardsDeck)
+#print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
+#print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 robin = Robin()
 while(True):
-    print("1 -> Draw Hazards")
+    print("1 -> Draw 2 Hazards")
     print("2 -> Use Card Ability")
     print("3 -> Read Card Ability")
     print("4 -> Count Remaining Cards")
     choice = input("What would you like to do?")
+    print(choice)
     if(choice == 1):
-        #DrawCard(Hazards)
-        #DrawCard(Hazards)
+        print("Life Points: ", robin.lifePoints)
+        print(drawHazardCard(hazardsDeck, hazardDiscards).reward)
+        print(drawHazardCard(hazardsDeck, hazardDiscards).reward)
+        print("Choose a Hazard for him to face")
         #Print Hazard Cards name, effect, drawcount, Reward
         #Ask which card they pick
         #FightStarted = True
         #if they want to draw card, enter 1
         #Ask if they want to concede
         #Calculate lifepoints
-        pass
     elif(choice == 2):
         pass
     elif(choice == 3):
         pass
     elif(choice == 4):
-        pass
+        print("Cards in player deck: ", len(fightDeck))
+        print("Cards in hazard deck: ", len(hazardsDeck))
+        print("Cards in discards deck: ", len(fightDeckDiscards))
     elif(choice == 5):
         pass
-    print("Choose a Hazard for him to face")
-    print("Life Points: ",robin.lifePoints)
-    break;
+    else:
+        print("Oops, try again")
