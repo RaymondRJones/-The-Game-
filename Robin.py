@@ -273,7 +273,7 @@ while(True):
     print("2 -> Use Card Ability")
     print("3 -> Read Card Ability")
     print("4 -> Count Remaining Cards")
-    choice = input("What would you like to do?")
+    choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
         print("Life Points: ", robin.lifePoints)
@@ -284,8 +284,16 @@ while(True):
         #Ask which card they pick
         #FightStarted = True
         #if they want to draw card, enter 1
-        #Ask if they want to concede
-        #Calculate lifepoints
+            #Draw card from fight deck and put into mission list
+            #Read Card name and ability and fight score
+            #Display needed fightscore to win, hazard.fightscore - cardfightscore
+            #If they concede, Ask to choose cards to burn from mission cards
+            #Subtract from their lifepoints the hazard.fightscore - total_fightscore
+        #if Difference Score is negative, they win if they concede
+        #Convert Hazard into FightCard
+        #Add FightCard into their discard pile
+        #Print you won statement
+
     elif(choice == 2):
         pass
     elif(choice == 3):
