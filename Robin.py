@@ -27,9 +27,8 @@ def drawHazardCard(cards, hazardDiscards):
     hazardDiscards.append(drawnCard)
     cards.pop(0)
     return drawnCard
-def drawFightCard(cards, fightDiscards):
+def drawFightCard(cards):
     drawnCard = cards[0]
-    fightDiscards.append(drawnCard)
     cards.pop(0)
     return drawnCard
 
@@ -222,33 +221,15 @@ class Pirates(Hazard):
 def displayFightCard(card):
     print("Name: ", card.name, "Score: ", card.fightScore, "Ability: ", card.ability)
 def displayHazard(card):
-    print("Discovery!", card.name, "gives you: ", card.reward, "Score to defeat: ", card.greenScore, "Available draws: ",card.drawCount)
+    print("Hazard: ", card.name, "gives you: ", card.reward, "Score to defeat: ", card.greenScore, "Available draws: ",card.drawCount)
 def displayMissionList(missionList):
     for x in missionList:
         print(displayFightCard(x))
-def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
-    print("Life Points: ", robin.lifePoints)
-    displayHazard(cards[0])
-    displayHazard(cards[1])
-    choice = int(input("Which Hazard do you want, 1 or 2?"))
-    if (choice == 1):
-        #Start mission using card of choice
-        #Stores unused card into discard pile
-        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
-        #Draws other card from deck and puts into discards
-        drawHazardCard(cards,discards)
-    else:
-        drawHazardCard(cards,discards)
-        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
-
 #NEEDS FUNCTIONS TO CHECK DRAW COUNT, NEEDS FUNCTIONS TO CALCULATE LIFE
 #calculates remaining draw count given a hazard cards and mission list cards fight cards
 def calculateDrawCount(hazardCard, missionList):
     total = hazardCard.drawCount
-    total = total - len(missionList)
-    if(total <= 0):
-        print("No more free draws")
-        return 0
+    total = total - len(missionList) -1
     return total
 def clearMissionList(missionList, discardPile, life):
     counter = life
@@ -260,7 +241,9 @@ def clearMissionList(missionList, discardPile, life):
         else:
             missionList.pop(choice2 - 1)
             counter = counter - 1
-
+    for i in missionList:
+        discardPile.append(i)
+    missionList.clear()
 #Difficulty - fight score of all mission cards given a negative
 def calculateLife(hazardCard, missionList):
     totalDamage = 0
@@ -270,31 +253,64 @@ def calculateLife(hazardCard, missionList):
         totalDamage = int(hazardCard.yellowScore)
     elif(hazardCard.alertLevel == 2):
         totalDamage = int(hazardCard.redScore)
-    else:
-        print("Please enter a different number")
     for x in missionList:
         totalDamage = totalDamage - x.fightScore
     return totalDamage
+#Converts Hazard Card and adds into the discards pile
+def convertHazardCard(hazardCard, fightDeckDiscards):
+    fightDeckDiscards.append(hazardCard.convertToReward())
+#Checks if deck is empty
+def isDeckEmpty(deck):
+    if len(deck) == 0:
+        return True
+    else:
+        return False
+#If Deck is empty, set equal to discard deck and shuffle
+#If deck is fight add aging card to discard pile and shuffle
+def refill(deck,discards):
+    pass
+def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
+    print("Life Points: ", robin.lifePoints)
+    displayHazard(cards[0])
+    displayHazard(cards[1])
+    choice = int(input("Which Hazard do you want, 1 or 2?"))
+    if (choice == 1):
+        #Start mission using card of choice
+        #Stores unused card into hazard discard pile
+        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
+        #Draws other card from deck and puts into discards
+        drawHazardCard(cards,discards)
+    else:
+        drawHazardCard(cards,discards)
+        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
+
 def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
+    #if Available draws is negative, subtract from life calc
+    availableDraws = 0
+    life = 0
     while(True):
         choice = int(input("1.)Draw a card  2.) Concede Battle"))
         if(choice == 1):
+            availableDraws = calculateDrawCount(hazardCard, missionList)
+            life = calculateLife(hazardCard, missionList)
             print("---------------DEBUG----------------")
             displayHazard(hazardCard)
-            print("Available Draws: ",calculateDrawCount(hazardCard, missionList))
-            print("Score needed to win ",calculateLife(hazardCard, missionList))
-            missionList.append(drawFightCard(fightDeck, fightDeckDiscards))
+            print("Available Draws: ", availableDraws)
+            print("Score needed to win: ", life)
+            missionList.append(drawFightCard(fightDeck))
             displayMissionList(missionList)
             print("-----------------DEBUG---------------")
-        # Draw card from fight deck and put into mission list
-        # Display needed fightscore to win, hazard.fightscore - cardfightscore
+            #Dra
         elif(choice == 2):
-            life = calculateLife(hazardCard, missionList)
-            #loseLife()
             # -> Display MissionList Array
             if(life > 0):
+                #Convert Hazard card and add to discards
                 clearMissionList(missionList, fightDeckDiscards, life)
                 missionList.clear()
+                break;
+            elif(availableDraws <= 0):
+                life = life + availableDraws
+                return life
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -377,15 +393,15 @@ shuffle(hazardsDeck)
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 robin = Robin()
 while(True):
-    missionList = [fightDeck[0],fightDeck[1], fightDeck[2]]
-    clearMissionList(missionList, fightDeckDiscards, 2)
-    displayMissionList(missionList)
-    print("-------------------------")
+    print("-----------OPTIONS-------------")
     print("1 -> Draw 2 Hazards")
     print("2 -> Use Card Ability")
     print("3 -> Read Card Ability")
     print("4 -> Count Remaining Cards")
-    print("---------------------------")
+    print("-----------OPTIONS---------------")
+    print("---------------DISCARD PILE----------------")
+    displayMissionList(fightDeckDiscards)
+    print("-----------------DISCARD PULE---------------")
     choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
