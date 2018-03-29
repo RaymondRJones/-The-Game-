@@ -254,7 +254,7 @@ def calculateLife(hazardCard, missionList):
     elif(hazardCard.alertLevel == 2):
         totalDamage = int(hazardCard.redScore)
     for x in missionList:
-        totalDamage = totalDamage - x.fightScore
+        totalDamage = totalDamage - int(x.fightScore)
     return totalDamage
 #Converts Hazard Card and adds into the discards pile
 def convertHazardCard(hazardCard, fightDeckDiscards):
@@ -283,34 +283,38 @@ def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
     else:
         drawHazardCard(cards,discards)
         startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
-
+#NEEDS FUNCTION TO USE ABILITY CARDS
+#NEEDS FUNCTION TO ADD AGING CARDS
+#NEED TO TEST CONVERT HAZARD TO REWARD
 def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     #if Available draws is negative, subtract from life calc
     availableDraws = 0
-    life = 0
+    damageNeeded = 0
     while(True):
         choice = int(input("1.)Draw a card  2.) Concede Battle"))
         if(choice == 1):
             availableDraws = calculateDrawCount(hazardCard, missionList)
-            life = calculateLife(hazardCard, missionList)
+            damageNeeded = calculateLife(hazardCard, missionList)
             print("---------------DEBUG----------------")
             displayHazard(hazardCard)
             print("Available Draws: ", availableDraws)
-            print("Score needed to win: ", life)
+            print("damageNeeded: ", damageNeeded)
             missionList.append(drawFightCard(fightDeck))
             displayMissionList(missionList)
             print("-----------------DEBUG---------------")
             #Dra
         elif(choice == 2):
             # -> Display MissionList Array
-            if(life > 0):
+            if(availableDraws <= 0):
+                damageNeeded = damageNeeded + abs(availableDraws)
+            if(damageNeeded > 0):
                 #Convert Hazard card and add to discards
-                clearMissionList(missionList, fightDeckDiscards, life)
+                clearMissionList(missionList, fightDeckDiscards, damageNeeded)
                 missionList.clear()
-                break;
-            elif(availableDraws <= 0):
-                life = life + availableDraws
-                return life
+                return damageNeeded
+            else:
+                print("Success!")
+                convertHazardCard(hazardCard, fightDeckDiscards)
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -320,7 +324,7 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
         # Print you won statement
         else:
             print("oops")
-    return life
+    return 0
     #TO DO - FUNCTION RETURNS LIFE, LIFE FUNCTION TAKES AS INPUT TO DECREASE LIFE IF GREATER THAN 0
 #Creates fightCards with their constructors to be played in the game
 #Returns array filled with starting fightCards
