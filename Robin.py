@@ -250,6 +250,17 @@ def calculateDrawCount(hazardCard, missionList):
         print("No more free draws")
         return 0
     return total
+def clearMissionList(missionList, discardPile, life):
+    counter = life
+    while(counter >= 1):
+        displayMissionList(missionList)
+        choice2 = int(input("Enter number of card you want to destroy"))
+        if(choice2 < 1 or choice2 > len(missionList)):
+            print("Please enter a valid number")
+        else:
+            missionList.pop(choice2 - 1)
+            counter = counter - 1
+
 #Difficulty - fight score of all mission cards given a negative
 def calculateLife(hazardCard, missionList):
     totalDamage = 0
@@ -260,7 +271,7 @@ def calculateLife(hazardCard, missionList):
     elif(hazardCard.alertLevel == 2):
         totalDamage = int(hazardCard.redScore)
     else:
-        print("There seems to be a problem")
+        print("Please enter a different number")
     for x in missionList:
         totalDamage = totalDamage - x.fightScore
     return totalDamage
@@ -282,9 +293,8 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
             #loseLife()
             # -> Display MissionList Array
             if(life > 0):
-                for i in range(0, life):
-                    choice2 = int(input("Enter number of card you want to destroy"))
-                    missionList.pop(choice2 -1)
+                clearMissionList(missionList, fightDeckDiscards, life)
+                missionList.clear()
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -367,6 +377,9 @@ shuffle(hazardsDeck)
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 robin = Robin()
 while(True):
+    missionList = [fightDeck[0],fightDeck[1], fightDeck[2]]
+    clearMissionList(missionList, fightDeckDiscards, 2)
+    displayMissionList(missionList)
     print("-------------------------")
     print("1 -> Draw 2 Hazards")
     print("2 -> Use Card Ability")
