@@ -86,13 +86,6 @@ class FightCard:
             print("Two fight Score")
         else:
             print("There seems to be a mistake")
-    def useAbility(self, Robin):
-        if (self.ability == "eating"):
-            global lifePoints
-            lifePoints += 1
-        elif (self.ability == "hungry"):
-            global lifePoints
-            lifePoints -= 1
         #if Ability == Copy
             #Double score of highest card in mission[]
 #Uses Inheritance to add specific types of cards
@@ -168,7 +161,9 @@ class Hazard:
         return freshCard
     #Increases alert level by 1
     def increaseAlert(self):
-        pass
+        self.alertLevel += 1
+    def decreaseAlert(self):
+        self.alert -= 1
 class Cannibals(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=5, yellowScore=9, redScore=14, drawCount=5):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
@@ -209,7 +204,22 @@ def displayHazard(card):
 def displayMissionList(missionList):
     for x in missionList:
         print(displayFightCard(x))
-#NEEDS FUNCTIONS TO CHECK DRAW COUNT, NEEDS FUNCTIONS TO CALCULATE LIFE
+#UNTESTED METHOD
+# Alters Mission List... Mybe Alter deck...Alter Hazard Cards
+def useAbility(hazardCard, missionList, fightCardDeck, fightCard):
+    if (fightCard.ability == "eating"):
+        global lifePoints
+        lifePoints += 1
+    elif (fightCard.ability == "hungry"):
+        global lifePoints
+        lifePoints -= 1
+    elif fightCard.ability == "strategy":
+        pass
+    elif fightCard.ability == "vision":
+        pass
+    elif fightCard.ability == "phase":
+        pass
+
 #calculates remaining draw count given a hazard cards and mission list cards fight cards
 def calculateDrawCount(hazardCard, missionList):
     total = hazardCard.drawCount
@@ -253,13 +263,24 @@ def isDeckEmpty(deck):
         return True
     else:
         return False
+#UNTESTED METHODS
+#If Fight deck empty, set equal to discards and shuffle
+def refillFight(deck,discards, ageDeck):
+    deck = list(discards)
+    deck.append(ageDeck[0])
+    shuffle(deck)
+    return deck
+def refillHazzards(deck, discards):
+    deck = list(discards)
+    for i in deck:
+        i.increaseAlert
+    shuffle(deck)
 def removeLife(damage):
     global lifePoints
     lifePoints -= damage
 #If Deck is empty, set equal to discard deck and shuffle
 #If deck is fight add aging card to discard pile and shuffle
-def refill(deck,discards):
-    pass
+
 def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     #if Available draws is negative, subtract from life calc
     availableDraws = 0
