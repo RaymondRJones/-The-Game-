@@ -233,7 +233,7 @@ def calculateDrawCount(hazardCard, missionList):
     return total
 def clearMissionList(missionList, discardPile, life):
     counter = life
-    while(counter >= 1):
+    while(counter > 1):
         displayMissionList(missionList)
         choice2 = int(input("Enter number of card you want to destroy"))
         if(choice2 < 1 or choice2 > len(missionList)):
@@ -292,15 +292,15 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     damageNeeded = 0
     while(True):
         choice = int(input("1.)Draw a card  2.) Concede Battle"))
+        availableDraws = calculateDrawCount(hazardCard, missionList)
         if(choice == 1):
-            availableDraws = calculateDrawCount(hazardCard, missionList)
-            damageNeeded = calculateLife(hazardCard, missionList)
             print("---------------DEBUG----------------")
             displayHazard(hazardCard)
-            print("Available Draws: ", availableDraws)
-            print("damageNeeded: ", damageNeeded)
             missionList.append(drawFightCard(fightDeck))
             displayMissionList(missionList)
+            damageNeeded = calculateLife(hazardCard, missionList)
+            print("Available Draws: ", availableDraws)
+            print("damageNeeded: ", damageNeeded)
             print("-----------------DEBUG---------------")
             #Dra
         elif(choice == 2):
@@ -315,6 +315,8 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
             else:
                 print("Success!")
                 convertHazardCard(hazardCard, fightDeckDiscards)
+                clearMissionList(missionList, fightDeckDiscards, damageNeeded)
+                missionList.clear()
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -397,15 +399,16 @@ shuffle(hazardsDeck)
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 robin = Robin()
 while(True):
+    print("---------------DISCARD PILE----------------")
+    displayMissionList(fightDeckDiscards)
+    print("-----------------DISCARD PULE---------------")
     print("-----------OPTIONS-------------")
     print("1 -> Draw 2 Hazards")
     print("2 -> Use Card Ability")
     print("3 -> Read Card Ability")
     print("4 -> Count Remaining Cards")
     print("-----------OPTIONS---------------")
-    print("---------------DISCARD PILE----------------")
-    displayMissionList(fightDeckDiscards)
-    print("-----------------DISCARD PULE---------------")
+
     choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
