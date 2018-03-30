@@ -1,20 +1,15 @@
 import random
 
 destroyedCards = []
-hazardDeck = []
 agingDeck = []
 missionList = []
 hazardDiscards = []
 fightDeckDiscards = []
-
-class Robin:
-    lifePoints = 20
-
-    def __init__(self):
-        self.lifePoints = 20
-
+lifePoints = 20
 #Functions
-
+"""
+block comment
+"""
 #Shuffles deck of cards
 def shuffle(cards):
     random.shuffle(cards)
@@ -31,18 +26,6 @@ def drawFightCard(cards):
     drawnCard = cards[0]
     cards.pop(0)
     return drawnCard
-
-#Places card into pile to be discarded and eventually added back into deck
-def discard(card):
-    pass
-    #fightDeckDiscards.append()
-    #fightDeck.erase(
-
-#removes card from game existence from array
-def burnCard(cards):
-    pass
-    #
-
 #Creates Deck filled with Aging cards that must be drawn
 def createAgingDeck():
     pass
@@ -105,12 +88,13 @@ class FightCard:
             print("There seems to be a mistake")
     def useAbility(self, Robin):
         if (self.ability == "eating"):
-            Robin.lifePoints += 1
+            global lifePoints
+            lifePoints += 1
         elif (self.ability == "hungry"):
-            Robin.lifePoints = Robin.lifePoints - 1
+            global lifePoints
+            lifePoints -= 1
         #if Ability == Copy
             #Double score of highest card in mission[]
-#Fix array
 #Uses Inheritance to add specific types of cards
 #8
 #1 eating
@@ -235,8 +219,12 @@ def clearMissionList(missionList, discardPile, life):
     counter = life
     while(counter > 1):
         displayMissionList(missionList)
-        choice2 = int(input("Enter number of card you want to destroy"))
-        if(choice2 < 1 or choice2 > len(missionList)):
+        choice2 = int(input("Enter number of card you want to destroy or press 0 to not destroy"))
+        if(choice == -1):
+            break;
+        if(choice2 == 0):
+            counter = counter - 1
+        elif(choice2 < 1 or choice2 > len(missionList)):
             print("Please enter a valid number")
         else:
             missionList.pop(choice2 - 1)
@@ -265,27 +253,13 @@ def isDeckEmpty(deck):
         return True
     else:
         return False
+def removeLife(damage):
+    global lifePoints
+    lifePoints -= damage
 #If Deck is empty, set equal to discard deck and shuffle
 #If deck is fight add aging card to discard pile and shuffle
 def refill(deck,discards):
     pass
-def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
-    print("Life Points: ", robin.lifePoints)
-    displayHazard(cards[0])
-    displayHazard(cards[1])
-    choice = int(input("Which Hazard do you want, 1 or 2?"))
-    if (choice == 1):
-        #Start mission using card of choice
-        #Stores unused card into hazard discard pile
-        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
-        #Draws other card from deck and puts into discards
-        drawHazardCard(cards,discards)
-    else:
-        drawHazardCard(cards,discards)
-        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
-#NEEDS FUNCTION TO USE ABILITY CARDS
-#NEEDS FUNCTION TO ADD AGING CARDS
-#NEED TO TEST CONVERT HAZARD TO REWARD
 def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     #if Available draws is negative, subtract from life calc
     availableDraws = 0
@@ -305,18 +279,24 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
             #Dra
         elif(choice == 2):
             # -> Display MissionList Array
-            if(availableDraws <= 0):
-                damageNeeded = damageNeeded + abs(availableDraws)
-            if(damageNeeded > 0):
-                #Convert Hazard card and add to discards
-                clearMissionList(missionList, fightDeckDiscards, damageNeeded)
-                missionList.clear()
-                return damageNeeded
-            else:
-                print("Success!")
+            #Win Condition
+            if(damageNeeded <= 0):
+                if (availableDraws < 0):
+                    removeLife(abs(availableDraws) - 1)
+                #life points not working
                 convertHazardCard(hazardCard, fightDeckDiscards)
                 clearMissionList(missionList, fightDeckDiscards, damageNeeded)
                 missionList.clear()
+            #Loss
+            else:
+                if (availableDraws < 0):
+                    damageNeeded = damageNeeded + abs(availableDraws)
+                #Convert Hazard card and add to discards
+                removeLife(damageNeeded)
+                clearMissionList(missionList, fightDeckDiscards, damageNeeded)
+                missionList.clear()
+                print(lifePoints)
+
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -326,7 +306,23 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
         # Print you won statement
         else:
             print("oops")
-    return 0
+    return lifePoints
+def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
+    displayHazard(cards[0])
+    displayHazard(cards[1])
+    choice = int(input("Which Hazard do you want, 1 or 2?"))
+    if (choice == 1):
+        #Start mission using card of choice
+        #Stores unused card into hazard discard pile
+        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
+        #Draws other card from deck and puts into discards
+        drawHazardCard(cards,discards)
+    else:
+        drawHazardCard(cards,discards)
+        startMission(drawHazardCard(cards,discards), fightDeck,fightDeckDiscards,missionList)
+#NEEDS FUNCTION TO USE ABILITY CARDS
+#NEEDS FUNCTION TO ADD AGING CARDS
+#NEED TO TEST CONVERT HAZARD TO REWARD
     #TO DO - FUNCTION RETURNS LIFE, LIFE FUNCTION TAKES AS INPUT TO DECREASE LIFE IF GREATER THAN 0
 #Creates fightCards with their constructors to be played in the game
 #Returns array filled with starting fightCards
@@ -390,14 +386,10 @@ def createHazardsDeck():
                    ]
     return hazardsDeck
 print("Building Deck...")
-#For Loop to Create Starting Robin Deck
-fightDeck = createFightCardsDeck()
-hazardsDeck = createHazardsDeck()
-shuffle(fightDeck)
-shuffle(hazardsDeck)
 #print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
-robin = Robin()
+hazardsDeck = createHazardsDeck()
+fightDeck = createFightCardsDeck()
 while(True):
     print("---------------DISCARD PILE----------------")
     displayMissionList(fightDeckDiscards)
@@ -408,11 +400,13 @@ while(True):
     print("3 -> Read Card Ability")
     print("4 -> Count Remaining Cards")
     print("-----------OPTIONS---------------")
+    print("LifePoints:", lifePoints)
 
     choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
        startHazard(hazardsDeck, hazardDiscards, fightDeck, fightDeckDiscards, missionList)
+       print("Life Points:", lifePoints)
     elif(choice == 2):
         pass
     elif(choice == 3):
