@@ -110,7 +110,7 @@ class FightCard:
             Robin.lifePoints = Robin.lifePoints - 1
         #if Ability == Copy
             #Double score of highest card in mission[]
-
+#Fix array
 #Uses Inheritance to add specific types of cards
 #8
 #1 eating
