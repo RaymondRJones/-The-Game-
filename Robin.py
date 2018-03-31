@@ -58,7 +58,7 @@ class FightCard:
         return True
     #checks names and details card ability
     #UNTESTED
-    def checkAbility(self):
+    def printAbility(self):
     #Checks cards ability and performs action
         if(self.ability == "food"):
             print("Food: Restores 1 life point")
@@ -126,32 +126,38 @@ class Eating(FightCard):
 class Weak(FightCard):
     def __init__(self, name="weak", fightScore=0, ability="none"):
         super().__init__(name, fightScore, ability)
-
+def useRealization(missionList):
+    displayMissionList(missionList)
+    choice = int(input("Choose card to delete"))
+    missionList.pop(choice-1)
 class Realization(FightCard):
     def __init__(self, name="weak", fightScore=0, ability="none"):
         super().__init__(name, fightScore, ability)
-    def useRealization(self):
-        #Prompts Destroy mission
-        #Maybe turn into a CAN use vision or not
-        if not self.isTapped():
-            global missionList
-            choice = int(input("Choose card to delete"))
-            #displayMissionList()
-            missionList.pop(choice)
-            self.tapCard()
-        else:
-            print("Card already tapped")
+def useVision(fightDeck):
+    temp = []
+    for i in range(0,3):
+        temp.append(drawFightCard(fightDeck))
+        displayFightCard(temp[i])
+    choice1 = int(input("Enter the first card you want to see in deck"))
+    temp.insert(0, temp.pop(choice1-1))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    choice2 = int(input("Enter the second card you want to see in deck"))
+    temp.insert(1, temp.pop(choice2-1))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    choice3 = int(input("Enter the third card you want to see in deck"))
+    temp.insert(2, temp.pop(choice3-1))
+    for j in range(0, len(fightDeck)):
+        temp.append(drawFightCard(fightDeck))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    return temp
+
+
 class Vision(FightCard):
-    def __init__(self, name="weak", fightScore=0, ability="none"):
+    def __init__(self, name="Vision", fightScore=0, ability="Vision"):
         super().__init__(name, fightScore, ability)
-    #Have this function return True or False if they can use Vision
-    def useVision(self):
-        if not self.isTapped():
-            pass
-            #Function that creates new array with given order of cards
-            #Places rest of deck at bottom of cards by appending
-        else:
-            print("Card already tapped")
 class Mimicry(FightCard):
     def __init__(self, name="weak", fightScore=0, ability="none"):
         super().__init__(name, fightScore, ability)
@@ -241,21 +247,6 @@ def displayHazard(card):
 def displayMissionList(missionList):
     for x in missionList:
         print(displayFightCard(x))
-#UNTESTED METHOD
-# Alters Mission List... Mybe Alter deck...Alter Hazard Cards
-def useAbility(hazardCard, missionList, fightCardDeck, fightCard):
-    global lifePoints
-    if (fightCard.ability == "eating"):
-        lifePoints += 1
-    elif (fightCard.ability == "hungry"):
-        lifePoints -= 1
-    elif fightCard.ability == "strategy":
-        pass
-    elif fightCard.ability == "vision":
-        pass
-    elif fightCard.ability == "phase":
-        pass
-
 #calculates remaining draw count given a hazard cards and mission list cards fight cards
 def calculateDrawCount(hazardCard, missionList):
     total = hazardCard.drawCount
@@ -469,20 +460,23 @@ def createAgeDeck():
     ageDeck.append(Stupid())
     return ageDeck
 
-print("Building Deck...")
 #print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 ageDeck = createAgeDeck()
 hazardsDeck = createHazardsDeck()
 fightDeck = createFightCardsDeck()
+shuffle(fightDeck)
 smallDeck1 = []
 smallDeck2 = []
-smallDeck2.append(Weak())
-smallDeck2.append(Weak())
+smallDeck2.append(Vision())
+smallDeck2.append(Realization())
+useRealization(smallDeck2)
+print(len(smallDeck2))
 smallDeck1.append(Raft("raft", "Strategy", 0))
 testDiscard = list(hazardsDeck)
 testDiscard2 = list(fightDeck)
 while(True):
+    break
     print("---------------DISCARD PILE----------------")
     displayMissionList(fightDeckDiscards)
     print("-----------------DISCARD PULE---------------")
