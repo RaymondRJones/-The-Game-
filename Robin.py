@@ -57,6 +57,7 @@ class FightCard:
             return False
         return True
     #checks names and details card ability
+    #UNTESTED
     def checkAbility(self):
     #Checks cards ability and performs action
         if(self.ability == "food"):
@@ -88,6 +89,7 @@ class FightCard:
             print("There seems to be a mistake")
         #if Ability == Copy
             #Double score of highest card in mission[]
+
 #Uses Inheritance to add specific types of cards
 #8
 #1 eating
@@ -112,22 +114,57 @@ class Genius(FightCard):
     def __init__(self,name = "genius", fightScore = 2,ability = "none"):
         super().__init__(name, fightScore, ability)
 class Eating(FightCard):
-    def __init__(self, name="eating", fightScore=0, ability="+2 Life"):
+    def __init__(self, name="eating", fightScore=0, ability="eating"):
+        super().__init__(name, fightScore, ability)
+    def useEat(self):
+        if not self.isTapped():
+            global lifePoints
+            lifePoints += 2
+            self.tapCard()
+        else:
+            print("Card already tapped")
+class Weak(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
         super().__init__(name, fightScore, ability)
 
+class Realization(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
+        super().__init__(name, fightScore, ability)
+    def useRealization(self):
+        #Prompts Destroy mission
+        #Maybe turn into a CAN use vision or not
+        if not self.isTapped():
+            global missionList
+            choice = int(input("Choose card to delete"))
+            #displayMissionList()
+            missionList.pop(choice)
+            self.tapCard()
+        else:
+            print("Card already tapped")
+class Vision(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
+        super().__init__(name, fightScore, ability)
+    #Have this function return True or False if they can use Vision
+    def useVision(self):
+        if not self.isTapped():
+            pass
+            #Function that creates new array with given order of cards
+            #Places rest of deck at bottom of cards by appending
+        else:
+            print("Card already tapped")
+class Mimicry(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
+        super().__init__(name, fightScore, ability)
 #10 cards
-class Aging:
-    def __init__(self, name, fightScore, ability):
-        self.name = name
-        self.diffScore = fightScore
-        self.ability = ability
-class Suicidal(Aging):
-    def __init__(self, name, fightScore):
-        super().__init__(name,fightScore)
-class Stupid(Aging):
-    def __init__(self, name, fightScore = -2):
-        super().__init__(name,fightScore)
-
+#I haven't recorded all 10 of these cards yet
+class Suicidal(FightCard):
+    def __init__(self, name = "Suicidal", fightScore = -2, ability = "none"):
+        super().__init__(name,fightScore, ability)
+        self.age = True
+class Stupid(FightCard):
+    def __init__(self, name ="Stupid", fightScore = -2, ability = "none"):
+        super().__init__(name,fightScore, ability)
+        self.age = True
 class Hazard:
 
     #Hazard cards have a name, winScore, and alert level
@@ -207,11 +244,10 @@ def displayMissionList(missionList):
 #UNTESTED METHOD
 # Alters Mission List... Mybe Alter deck...Alter Hazard Cards
 def useAbility(hazardCard, missionList, fightCardDeck, fightCard):
+    global lifePoints
     if (fightCard.ability == "eating"):
-        global lifePoints
         lifePoints += 1
     elif (fightCard.ability == "hungry"):
-        global lifePoints
         lifePoints -= 1
     elif fightCard.ability == "strategy":
         pass
@@ -225,6 +261,7 @@ def calculateDrawCount(hazardCard, missionList):
     total = hazardCard.drawCount
     total = total - len(missionList) -1
     return total
+#NEEDS FUNCTION TO DENY DELETION
 def clearMissionList(missionList, discardPile, life):
     counter = life
     while(counter > 1):
@@ -232,7 +269,7 @@ def clearMissionList(missionList, discardPile, life):
         choice2 = int(input("Enter number of card you want to destroy or press 0 to not destroy"))
         if(choice == -1):
             break;
-        if(choice2 == 0):
+        elif(choice2 == 0):
             counter = counter - 1
         elif(choice2 < 1 or choice2 > len(missionList)):
             print("Please enter a valid number")
@@ -265,19 +302,28 @@ def isDeckEmpty(deck):
         return False
 #UNTESTED METHODS
 #If Fight deck empty, set equal to discards and shuffle
-def refillFight(deck,discards, ageDeck):
+def refillFight(deck,discards):
+    global ageDeck
     deck = list(discards)
-    deck.append(ageDeck[0])
+    deck.append(drawFightCard(ageDeck))
     shuffle(deck)
     return deck
-def refillHazzards(deck, discards):
+def refillHazards(deck, discards):
     deck = list(discards)
     for i in deck:
-        i.increaseAlert
+        i.increaseAlert()
     shuffle(deck)
+    discards.clear()
+    return deck
 def removeLife(damage):
     global lifePoints
     lifePoints -= damage
+def hasLost():
+    global lifePoints
+    if(lifePoints <= 0):
+        print("You have died")
+        return True
+    else: return False
 #If Deck is empty, set equal to discard deck and shuffle
 #If deck is fight add aging card to discard pile and shuffle
 
@@ -286,8 +332,13 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     availableDraws = 0
     damageNeeded = 0
     while(True):
+        if(hasLost()):
+            break
         choice = int(input("1.)Draw a card  2.) Concede Battle"))
         availableDraws = calculateDrawCount(hazardCard, missionList)
+        if(len(fightDeck) < 2):
+            print("Length is D: ", len(fightDeckDiscards))
+            fightDeck = refillFight(fightDeck, fightDeckDiscards)
         if(choice == 1):
             print("---------------DEBUG----------------")
             displayHazard(hazardCard)
@@ -329,6 +380,12 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
             print("oops")
     return lifePoints
 def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
+    #Refilling Deck doesn't work with end game
+    if(len(cards) == 1):
+        drawHazardCard(cards,discards)
+        cards = list(refillHazards(cards, discards))
+    if(len(cards) == 0):
+        cards = list(refillHazards(cards, discards))
     displayHazard(cards[0])
     displayHazard(cards[1])
     choice = int(input("Which Hazard do you want, 1 or 2?"))
@@ -406,11 +463,25 @@ def createHazardsDeck():
                    wild1, wild2, wild3, wild4, cannibal1, cannibal2
                    ]
     return hazardsDeck
+def createAgeDeck():
+    ageDeck = []
+    ageDeck.append(Suicidal())
+    ageDeck.append(Stupid())
+    return ageDeck
+
 print("Building Deck...")
 #print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
+ageDeck = createAgeDeck()
 hazardsDeck = createHazardsDeck()
 fightDeck = createFightCardsDeck()
+smallDeck1 = []
+smallDeck2 = []
+smallDeck2.append(Weak())
+smallDeck2.append(Weak())
+smallDeck1.append(Raft("raft", "Strategy", 0))
+testDiscard = list(hazardsDeck)
+testDiscard2 = list(fightDeck)
 while(True):
     print("---------------DISCARD PILE----------------")
     displayMissionList(fightDeckDiscards)
@@ -426,8 +497,11 @@ while(True):
     choice = int(input("What would you like to do?"))
     print(choice)
     if(choice == 1):
-       startHazard(hazardsDeck, hazardDiscards, fightDeck, fightDeckDiscards, missionList)
-       print("Life Points:", lifePoints)
+        if(hasLost()):
+            break
+        # startHazard(hazardsDeck, hazardDiscards, fightDeck, fightDeckDiscards, missionList)
+        startHazard(smallDeck1, testDiscard, smallDeck2, testDiscard2, missionList)
+        print("Life Points:", lifePoints)
     elif(choice == 2):
         pass
     elif(choice == 3):
