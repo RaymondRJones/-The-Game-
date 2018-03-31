@@ -10,167 +10,8 @@ lifePoints = 20
 """
 block comment
 """
-#Shuffles deck of cards
-def shuffle(cards):
-    random.shuffle(cards)
-    return cards
-
-#Draws a card from a deck of cards
-#Removes card from deck
-def drawHazardCard(cards, hazardDiscards):
-    drawnCard = cards[0]
-    hazardDiscards.append(drawnCard)
-    cards.pop(0)
-    return drawnCard
-def drawFightCard(cards):
-    drawnCard = cards[0]
-    cards.pop(0)
-    return drawnCard
-#Creates Deck filled with Aging cards that must be drawn
-def createAgingDeck():
-    pass
-    #
-#Add card back into it's respective deck
-def addCard(deck):
-    pass
-    #
-#When Deck is depleted, fill with discard and add aging card to fight deck
-
-class FightCard:
-    def __init__(self, name, fightScore, ability):
-        self.name = name
-        self.fightScore = fightScore
-        self.tapped = 0
-        self.ability = ability
-    #Returns name and effect of ability
-    def getAbility(self):
-        pass
-
-    #Tapps the card
-    def tapCard(self):
-        self.tapped = 1
-    #Untaps Card
-    def unTapCard(self):
-        self.tapped = 0
-    def isTapped(self):
-        if(self.tapped == 0):
-            return False
-        return True
-    #checks names and details card ability
-    #UNTESTED
-    def printAbility(self):
-    #Checks cards ability and performs action
-        if(self.ability == "food"):
-            print("Food: Restores 1 life point")
-        if(self.ability == "eating"):
-            print("Food: Restores 2 life point")
-        elif(self.ability == "realization"):
-            print("realization, destroy one card from mission")
-        elif(self.ability == "vision"):
-            print("vision, Draw 3 cards, sort them, put at top of deck")
-        elif(self.ability == "mimicry"):
-            print("Copy one cards ability")
-        elif(self.ability == "equipment"):
-            print("Draw 2 cards")
-        elif(self.ability == "weapon"):
-            print("No Effect")
-        elif(self.ability == "repeat"):
-            print("double fight score")
-        elif(self.ability == "book"):
-            print("???")
-        elif(self.ability == "strategy"):
-            print("Exchange two cards from mission and deck")
-        elif(self.ability == "phase"):
-            print("Drop down phase for mission")
-        elif(self.ability == "experience"):
-            print("Plus one Card")
-            print("Two fight Score")
-        else:
-            print("There seems to be a mistake")
-        #if Ability == Copy
-            #Double score of highest card in mission[]
-
-#Uses Inheritance to add specific types of cards
-#8
-#1 eating
-class Weak(FightCard):
-    def __init__(self, name="weak", fightScore=0, ability="none"):
-        super().__init__(name,fightScore, ability)
-#5
-class Distracted(FightCard):
-    def __init__(self,name="distracted", fightScore="-1",ability="none"):
-        super().__init__(name, fightScore, ability)
-        self.ability = ability
-class Stupid(FightCard):
-    def __init__(self, name = "very stupid", fightScore = -3, ability = "none"):
-        super().__init__(name,fightScore, ability)
-        self.ability = ability
-#3
-class Focused(FightCard):
-    def __init__(self,name = "focused", fightScore = 1,ability = "none"):
-        super().__init__(name, fightScore, ability)
-#1
-class Genius(FightCard):
-    def __init__(self,name = "genius", fightScore = 2,ability = "none"):
-        super().__init__(name, fightScore, ability)
-class Eating(FightCard):
-    def __init__(self, name="eating", fightScore=0, ability="eating"):
-        super().__init__(name, fightScore, ability)
-    def useEat(self):
-        if not self.isTapped():
-            global lifePoints
-            lifePoints += 2
-            self.tapCard()
-        else:
-            print("Card already tapped")
-class Weak(FightCard):
-    def __init__(self, name="weak", fightScore=0, ability="none"):
-        super().__init__(name, fightScore, ability)
-def useRealization(missionList):
-    displayMissionList(missionList)
-    choice = int(input("Choose card to delete"))
-    missionList.pop(choice-1)
-class Realization(FightCard):
-    def __init__(self, name="weak", fightScore=0, ability="none"):
-        super().__init__(name, fightScore, ability)
-def useVision(fightDeck):
-    temp = []
-    for i in range(0,3):
-        temp.append(drawFightCard(fightDeck))
-        displayFightCard(temp[i])
-    choice1 = int(input("Enter the first card you want to see in deck"))
-    temp.insert(0, temp.pop(choice1-1))
-    for i in range(0,3):
-        displayFightCard(temp[i])
-    choice2 = int(input("Enter the second card you want to see in deck"))
-    temp.insert(1, temp.pop(choice2-1))
-    for i in range(0,3):
-        displayFightCard(temp[i])
-    choice3 = int(input("Enter the third card you want to see in deck"))
-    temp.insert(2, temp.pop(choice3-1))
-    for j in range(0, len(fightDeck)):
-        temp.append(drawFightCard(fightDeck))
-    for i in range(0,3):
-        displayFightCard(temp[i])
-    return temp
 
 
-class Vision(FightCard):
-    def __init__(self, name="Vision", fightScore=0, ability="Vision"):
-        super().__init__(name, fightScore, ability)
-class Mimicry(FightCard):
-    def __init__(self, name="weak", fightScore=0, ability="none"):
-        super().__init__(name, fightScore, ability)
-#10 cards
-#I haven't recorded all 10 of these cards yet
-class Suicidal(FightCard):
-    def __init__(self, name = "Suicidal", fightScore = -2, ability = "none"):
-        super().__init__(name,fightScore, ability)
-        self.age = True
-class Stupid(FightCard):
-    def __init__(self, name ="Stupid", fightScore = -2, ability = "none"):
-        super().__init__(name,fightScore, ability)
-        self.age = True
 class Hazard:
 
     #Hazard cards have a name, winScore, and alert level
@@ -325,7 +166,7 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
     while(True):
         if(hasLost()):
             break
-        choice = int(input("1.)Draw a card  2.) Concede Battle"))
+        choice = int(input("1.)Draw a card  2.) Concede Battle  3.)Use Ability "))
         availableDraws = calculateDrawCount(hazardCard, missionList)
         if(len(fightDeck) < 2):
             print("Length is D: ", len(fightDeckDiscards))
@@ -359,7 +200,8 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
                 clearMissionList(missionList, fightDeckDiscards, damageNeeded)
                 missionList.clear()
                 print(lifePoints)
-
+        elif(choice == 3):
+            #useAbility()
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -460,6 +302,205 @@ def createAgeDeck():
     ageDeck.append(Stupid())
     return ageDeck
 
+#Shuffles deck of cards
+def shuffle(cards):
+    random.shuffle(cards)
+    return cards
+
+#Draws a card from a deck of cards
+#Removes card from deck
+def drawHazardCard(cards, hazardDiscards):
+    drawnCard = cards[0]
+    hazardDiscards.append(drawnCard)
+    cards.pop(0)
+    return drawnCard
+def drawFightCard(cards):
+    drawnCard = cards[0]
+    cards.pop(0)
+    return drawnCard
+#Creates Deck filled with Aging cards that must be drawn
+def createAgingDeck():
+    pass
+    #
+#Add card back into it's respective deck
+def addCard(deck):
+    pass
+    #
+
+class FightCard:
+    def __init__(self, name, fightScore, ability):
+        self.name = name
+        self.fightScore = fightScore
+        self.tapped = 0
+        self.ability = ability
+    #Returns name and effect of ability
+    def getAbility(self):
+        pass
+
+    #Tapps the card
+    def tapCard(self):
+        self.tapped = 1
+    #Untaps Card
+    def unTapCard(self):
+        self.tapped = 0
+    def isTapped(self):
+        if(self.tapped == 0):
+            return False
+        return True
+    #checks names and details card ability
+    #UNTESTED
+    def printAbility(self):
+    #Checks cards ability and performs action
+        if(self.ability == "food"):
+            print("Food: Restores 1 life point")
+        if(self.ability == "eating"):
+            print("Food: Restores 2 life point")
+        elif(self.ability == "Realization"):
+            print("realization, destroy one card from mission")
+        elif(self.ability == "Vision"):
+            print("vision, Draw 3 cards, sort them, put at top of deck")
+        elif(self.ability == "mimicry"):
+            print("Copy one cards ability")
+        elif(self.ability == "equipment"):
+            print("Draw 2 cards")
+        elif(self.ability == "weapon"):
+            print("No Effect")
+        elif(self.ability == "repeat"):
+            print("double fight score")
+        elif(self.ability == "book"):
+            print("???")
+        elif(self.ability == "strategy"):
+            print("Exchange two cards from mission and deck")
+        elif(self.ability == "phase"):
+            print("Drop down phase for mission")
+        elif(self.ability == "experience"):
+            print("Plus one Card")
+            print("Two fight Score")
+        else:
+            print("There seems to be a mistake")
+        #if Ability == Copy
+            #Double score of highest card in mission[]
+
+#Uses Inheritance to add specific types of cards
+#8
+#1 eating
+class Weak(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
+        super().__init__(name,fightScore, ability)
+#5
+class Distracted(FightCard):
+    def __init__(self,name="distracted", fightScore="-1",ability="none"):
+        super().__init__(name, fightScore, ability)
+        self.ability = ability
+class Stupid(FightCard):
+    def __init__(self, name = "very stupid", fightScore = -3, ability = "none"):
+        super().__init__(name,fightScore, ability)
+        self.ability = ability
+#3
+class Focused(FightCard):
+    def __init__(self,name = "focused", fightScore = 1,ability = "none"):
+        super().__init__(name, fightScore, ability)
+#1
+class Genius(FightCard):
+    def __init__(self,name = "genius", fightScore = 2,ability = "none"):
+        super().__init__(name, fightScore, ability)
+class Eating(FightCard):
+    def __init__(self, name="eating", fightScore=0, ability="eating"):
+        super().__init__(name, fightScore, ability)
+    def useEat(self):
+        if not self.isTapped():
+            global lifePoints
+            lifePoints += 2
+            self.tapCard()
+        else:
+            print("Card already tapped")
+class Weak(FightCard):
+    def __init__(self, name="weak", fightScore=0, ability="none"):
+        super().__init__(name, fightScore, ability)
+def unTapMission(missionList):
+    for i in missionList:
+        i.unTapCard()
+#Calls other Ability functions defined based on name of ability
+def useAbility(missionList, abilityCard, fightDeck, hazardsDeck):
+    choice = int(input("Which card do you want to use"))
+    if missionList[choice-1].isTapped :
+        print("Card already tapped")
+    else:
+        if missionList[choice-1].ability == "Vision":
+            useVision(fightDeck, abilityCard)
+        elif missionList[choice-1].ability == "Mimicry":
+            pass
+        """"
+           changeMimic()
+            useAbility()
+            tapcard
+            changeMimic("mimicry")
+        """""
+
+#Destroys card during a mission
+def useRealization(missionList, fightCard):
+    if(fightCard.isTapped() == True):
+        print("Card already used")
+    displayMissionList(missionList)
+    choice = int(input("Choose card to delete"))
+    fightCard.tapCard()
+    missionList.pop(choice-1)
+class Realization(FightCard):
+    def __init__(self, name="Realization", fightScore=0, ability="Realization"):
+        super().__init__(name, fightScore, ability)
+#Allows a vision card to reorganize top 3 cards of deck
+def useVision(fightDeck, fightCard):
+    if(fightCard.isTapped() == True):
+        print("Card already used")
+    temp = []
+    for i in range(0,3):
+        temp.append(drawFightCard(fightDeck))
+        displayFightCard(temp[i])
+    choice1 = int(input("Enter the first card you want to see in deck"))
+    temp.insert(0, temp.pop(choice1-1))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    choice2 = int(input("Enter the second card you want to see in deck"))
+    temp.insert(1, temp.pop(choice2-1))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    choice3 = int(input("Enter the third card you want to see in deck"))
+    temp.insert(2, temp.pop(choice3-1))
+    for j in range(0, len(fightDeck)):
+        temp.append(drawFightCard(fightDeck))
+    for i in range(0,3):
+        displayFightCard(temp[i])
+    fightCard.tapCard()
+    return temp
+
+
+class Vision(FightCard):
+    def __init__(self, name="Vision", fightScore=0, ability="Vision"):
+        super().__init__(name, fightScore, ability)
+#Allows card to mimic, AKA, take ability until mission ends
+def useMimic(missinList, fightCard):
+    if(fightCard.isTapped()):
+        print("Must be a mimic card")
+    else:
+        displayMissionList(missionList)
+        choice = int(input("Which card do you want to mimic"))
+        #Use Ability of ML[choice-1]
+    fightCard.tapCard()
+class Mimicry(FightCard):
+    def __init__(self, name="Mimicry", fightScore=0, ability="Copy"):
+        super().__init__(name, fightScore, ability)
+#10 cards
+#I haven't recorded all 10 of these cards yet
+class Suicidal(FightCard):
+    def __init__(self, name = "Suicidal", fightScore = -2, ability = "none"):
+        super().__init__(name,fightScore, ability)
+        self.age = True
+class Stupid(FightCard):
+    def __init__(self, name ="Stupid", fightScore = -2, ability = "none"):
+        super().__init__(name,fightScore, ability)
+        self.age = True
+
+
 #print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
 #print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")
 ageDeck = createAgeDeck()
@@ -470,8 +511,8 @@ smallDeck1 = []
 smallDeck2 = []
 smallDeck2.append(Vision())
 smallDeck2.append(Realization())
-useRealization(smallDeck2)
-print(len(smallDeck2))
+useRealization(smallDeck2, smallDeck2[1])
+print(smallDeck2[0].printAbility())
 smallDeck1.append(Raft("raft", "Strategy", 0))
 testDiscard = list(hazardsDeck)
 testDiscard2 = list(fightDeck)

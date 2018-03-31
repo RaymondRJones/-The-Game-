@@ -15,12 +15,13 @@ Finally the player will use their optimized fight deck to defeat two evil pirate
 
 ## But Why Raymond?
 
-I wanted to work on an app using Python and Django. I assumed this would be a good way to test my skills and learn both. Go hard or go home.
+I wanted to work on an app using Python and Django. I assumed this would be a good way to test my skills, learn both, and get better at organizing projects. Go hard or go home.
 
-I was inspired by a fun game recreated on the web called Spyfall, so I naturally chose a fun solitaire game to design, and hopefully I'll finish it.
+I was inspired by a fun party game recreated on the web called Spyfall, so I naturally chose a fun solitaire game to design, and hopefully I'll finish it.
 
 ## Disclaimer
 Not associated with Friedemann Friese Freitag-Project
-Basically first project with Python, so coding style likely has mistakes
+
+First real project with Python, so coding style has mistakes
 
 
