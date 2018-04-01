@@ -1,5 +1,5 @@
-import hazards
-import robin
+from hazards import *
+
 class FightCard:
     def __init__(self, name, fightScore, ability):
         self.name = name

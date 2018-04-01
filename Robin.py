@@ -1,6 +1,7 @@
 import random
-import fightcards
-import hazards
+
+from fightcards import *
+from hazards import *
 
 destroyedCards = []
 agingDeck = []
@@ -239,7 +240,6 @@ testDiscard = list(hazardsDeck)
 testDiscard2 = list(fightDeck)
 """
 while(True):
-    break
     print("---------------DISCARD PILE----------------")
     displayMissionList(fightDeckDiscards)
     print("-----------------DISCARD PULE---------------")
