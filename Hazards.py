@@ -1,11 +1,11 @@
 from fightcards import *
 
-class Hazard:
 
-    #Hazard cards have a name, winScore, and alert level
-    #They also have reward names, which give different abilites
-    #Can be turned into reward with unique fight values
-    def __init__(self, name, reward, alertLevel,  greenScore, yellowScore, redScore, drawCount):
+class Hazard:
+    # Hazard cards have a name, winScore, and alert level
+    # They also have reward names, which give different abilites
+    # Can be turned into reward with unique fight values
+    def __init__(self, name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount):
         self.name = name
         self.greenScore = greenScore
         self.yellowScore = yellowScore
@@ -13,63 +13,80 @@ class Hazard:
         self.reward = reward
         self.alertLevel = alertLevel
         self.drawCount = drawCount
-    #Checks if defeated, then turns into reward
+
+    # Checks if defeated, then turns into reward
     def convertToReward(self):
-        #if reward is "strat" make a strat with 1 fight
-        if(self.name == "Raft"):
+        # if reward is "strat" make a strat with 1 fight
+        if self.name == "Raft":
             freshCard = FightCard(self.reward, 0, self.reward)
-        elif(self.name == "Explore"):
-            if(self.reward == "weapon"):
+        elif self.name == "Explore":
+            if self.reward == "weapon":
                 freshCard = FightCard("weapon", 2, "none")
             freshCard = FightCard(self.reward, 1, self.reward)
-        elif(self.name == "Further Explore"):
+        elif self.name == "Further Explore":
             freshCard = FightCard(self.reward, 2, self.reward)
-        elif(self.name == "Wild Animal"):
+        elif self.name == "Wild Animal":
             freshCard = FightCard(self.reward, 3, self.reward)
-        elif(self.name == "Cannibals"):
+        elif self.name == "Cannibals":
             freshCard = FightCard("weapon", 4, "none")
         else:
             freshCard = "error"
         return freshCard
-    #Increases alert level by 1
+
+    # Increases alert level by 1
     def increaseAlert(self):
         self.alertLevel += 1
+
     def decreaseAlert(self):
         self.alert -= 1
+
+
 class Cannibals(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=5, yellowScore=9, redScore=14, drawCount=5):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
         self.name = "Cannibals"
         self.reward = "Weapon"
         self.alertLevel = alertLevel
+
+
 class WildAnimal(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=4, yellowScore=7, redScore=11, drawCount=4):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
         self.name = "Wild Animal"
         self.reward = reward
         self.alertLevel = alertLevel
+
+
 class FurtherExplore(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=2, yellowScore=5, redScore=8, drawCount=3):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
         self.name = "Further Explore"
         self.reward = reward
         self.alertLevel = alertLevel
+
+
 class Explore(Hazard):
     def __init__(self, name, reward, alertLevel, greenScore=1, yellowScore=3, redScore=6, drawCount=2):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
         self.name = "Explore"
         self.reward = reward
         self.alertLevel = alertLevel
+
+
 class Raft(Hazard):
-    def __init__(self, name, reward, alertLevel, greenScore = 0, yellowScore = 1, redScore = 3, drawCount= 1):
+    def __init__(self, name, reward, alertLevel, greenScore=0, yellowScore=1, redScore=3, drawCount=1):
         super().__init__(name, reward, alertLevel, greenScore, yellowScore, redScore, drawCount)
         self.name = "Raft"
         self.reward = reward
         self.alertLevel = alertLevel
+
+
 class Pirates(Hazard):
-    def __init__(self, name, diffScore, Reward,alertLevel):
-        super().__init__(name,diffScore,Reward, alertLevel)
-#Returns array filled with Hazards
+    def __init__(self, name, diffScore, Reward, alertLevel):
+        super().__init__(name, diffScore, Reward, alertLevel)
+
+
+# Returns array filled with Hazards
 def createHazardsDeck():
     # Creates 10 different Raft Cards
     raft1 = Raft("Raft", "strategy", 0)
@@ -116,4 +133,3 @@ def createHazardsDeck():
                    wild1, wild2, wild3, wild4, cannibal1, cannibal2
                    ]
     return hazardsDeck
-
