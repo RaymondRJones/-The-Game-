@@ -1,5 +1,4 @@
 import random
-
 from fightcards import *
 from hazards import *
 
@@ -125,6 +124,7 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
                 convertHazardCard(hazardCard, fightDeckDiscards)
                 clearMissionList(missionList, fightDeckDiscards, damageNeeded)
                 missionList.clear()
+                break
             #Loss
             else:
                 if (availableDraws < 0):
@@ -134,6 +134,7 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
                 clearMissionList(missionList, fightDeckDiscards, damageNeeded)
                 missionList.clear()
                 print(lifePoints)
+                break
         elif(choice == 3):
             #useAbility()
             break;
@@ -145,7 +146,6 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
         # Print you won statement
         else:
             print("oops")
-    return lifePoints
 def startHazard(cards, discards, fightDeck, fightDeckDiscards, missionList):
     #Refilling Deck doesn't work with end game
     if(len(cards) == 1):
@@ -227,7 +227,6 @@ ageDeck = createAgeDeck()
 hazardsDeck = createHazardsDeck()
 fightDeck = createFightCardsDeck()
 shuffle(fightDeck)
-"""
 
 smallDeck1 = []
 smallDeck2 = []
@@ -238,7 +237,7 @@ print(smallDeck2[0].printAbility())
 smallDeck1.append(Raft("raft", "Strategy", 0))
 testDiscard = list(hazardsDeck)
 testDiscard2 = list(fightDeck)
-"""
+
 while(True):
     print("---------------DISCARD PILE----------------")
     displayMissionList(fightDeckDiscards)

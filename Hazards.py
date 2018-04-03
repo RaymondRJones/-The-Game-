@@ -1,4 +1,5 @@
-import fightcards
+from fightcards import *
+
 class Hazard:
 
     #Hazard cards have a name, winScore, and alert level
@@ -115,3 +116,4 @@ def createHazardsDeck():
                    wild1, wild2, wild3, wild4, cannibal1, cannibal2
                    ]
     return hazardsDeck
+

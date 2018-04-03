@@ -1,3 +1,4 @@
+import random
 from hazards import *
 
 class FightCard:
@@ -149,7 +150,7 @@ def useRealization(missionList, fightCard):
     missionList.pop(choice-1)
 
 #Allows card to mimic, AKA, take ability until mission ends
-def useMimic(missinList, fightCard):
+def useMimic(missionList, fightCard):
     if(fightCard.isTapped()):
         print("Must be a mimic card")
     else:
@@ -170,3 +171,10 @@ class Stupid(FightCard):
     def __init__(self, name ="Stupid", fightScore = -2, ability = "none"):
         super().__init__(name,fightScore, ability)
         self.age = True
+def displayFightCard(card):
+    print("Name: ", card.name, "Score: ", card.fightScore, "Ability: ", card.ability)
+def displayHazard(card):
+    print("Hazard: ", card.name, "gives you: ", card.reward, "Score to defeat: ", card.greenScore, "Available draws: ",card.drawCount)
+def displayMissionList(missionList):
+    for x in missionList:
+        print(displayFightCard(x))
