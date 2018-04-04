@@ -184,12 +184,26 @@ def useMimic(missionList, fightCard):
         # Use Ability of ML[choice-1]
     fightCard.tapCard()
 
-
 class Mimicry(FightCard):
     def __init__(self, name="Mimicry", fightScore=0, ability="Copy"):
         super().__init__(name, fightScore, ability)
-
-
+#Asks user to discard missionList card, then draws another card to replace
+#Original ability stays in effect
+def exchange(missionList, fightCardDeck):
+    pass
+#Moves card from missionlist back into fightCard Deck
+def moveCard(missionList, fightCardDeck):
+    pass
+#Gives more available draws to user
+def drawCard():
+    pass
+#doubles value of a given fight card
+def doubleFight():
+    pass
+#Removes doubled value of given fight card
+def removeDouble():
+    pass
+#Calculate fightScore
 # 10 cards
 # I haven't recorded all 10 of these cards yet
 class Suicidal(FightCard):
