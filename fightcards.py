@@ -1,6 +1,9 @@
 import random
 from hazards import *
-
+"""
+Contains classes and methods that the fight cards must use.
+Involves creating all the deck of cards and having cards with various abilities
+"""
 
 class FightCard:
     def __init__(self, name, fightScore, ability):
@@ -131,30 +134,6 @@ def createFightCardsDeck():
     fightDeck.append(Genius())
     fightDeck.append(Eating())
     return fightDeck
-
-
-# Allows a vision card to reorganize top 3 cards of deck
-def useVision(fightDeck, fightCard):
-    temp = []
-    for i in range(0, 3):
-        temp.append(drawFightCard(fightDeck))
-        displayFightCard(temp[i])
-    choice1 = int(input("Enter the first card you want to see in deck"))
-    temp.insert(0, temp.pop(choice1 - 1))
-    for i in range(0, 3):
-        displayFightCard(temp[i])
-    choice2 = int(input("Enter the second card you want to see in deck"))
-    temp.insert(1, temp.pop(choice2 - 1))
-    for i in range(0, 3):
-        displayFightCard(temp[i])
-    choice3 = int(input("Enter the third card you want to see in deck"))
-    temp.insert(2, temp.pop(choice3 - 1))
-    for j in range(0, len(fightDeck)):
-        temp.append(drawFightCard(fightDeck))
-    for i in range(0, 3):
-        displayFightCard(temp[i])
-    fightCard.tapCard()
-    return temp
 
 
 class Vision(FightCard):
