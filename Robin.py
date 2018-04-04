@@ -15,7 +15,7 @@ block comment
 
 
 def displayFightCard(card):
-    print("Name: ", card.name, "Score: ", card.fightScore, "Ability: ", card.ability)
+    print("Name: ", card.name, "Score: ", card.fightScore, "Ability: ", card.ability, "| Tapped: ", card.isTapped())
 
 
 def displayHazard(card):
@@ -162,7 +162,7 @@ def startMission(hazardCard, fightDeck, fightDeckDiscards, missionList):
                 print(lifePoints)
                 break
         elif choice == 3:
-            # useAbility()
+            useAbility(missionList, fightDeck,fightDeckDiscards,hazardCard)
             break;
         # If they concede, Ask to choose cards to burn from mission cards
         # Subtract from their lifepoints the hazard.fightscore - total_fightscore
@@ -245,9 +245,10 @@ def unTapMission(missionList):
 
 
 # Calls other Ability functions defined based on name of ability
-def useAbility(missionList, abilityCard, fightDeck, hazardsDeck):
+def useAbility(missionList, abilityCard, fightDeck, hazardsCard):
     choice = int(input("Which card do you want to use"))
-    if missionList[choice - 1].isTapped:
+    if missionList[choice - 1].isTapped():
+        print(missionList[choice-1].ability)
         print("Card already tapped")
     else:
         if missionList[choice - 1].ability == "Vision":
@@ -273,7 +274,6 @@ smallDeck1 = []
 smallDeck2 = []
 smallDeck2.append(Vision())
 smallDeck2.append(Realization())
-useRealization(smallDeck2, smallDeck2[1])
 print(smallDeck2[0].printAbility())
 smallDeck1.append(Raft("raft", "Strategy", 0))
 testDiscard = list(hazardsDeck)
@@ -284,12 +284,11 @@ while True:
     displayMissionList(fightDeckDiscards)
     print("-----------------DISCARD PULE---------------")
     print("-----------OPTIONS-------------")
-    print("1 -> Draw 2 Hazards")
-    print("2 -> Use Card Ability")
-    print("3 -> Read Card Ability")
-    print("4 -> Count Remaining Cards")
+    print("1 -> Draw 2 Hazards", "          |Cards in player deck: ", len(fightDeck))
+    print("2 -> Use Card Ability", "        |Cards in hazard deck: ", len(hazardsDeck))
+    print("3 -> Read Card Ability", "       |Cards in discards deck: ", len(fightDeckDiscards))
+    print("4 -> Count Remaining Cards","   |LifePoints:", lifePoints)
     print("-----------OPTIONS---------------")
-    print("LifePoints:", lifePoints)
 
     choice = int(input("What would you like to do?"))
     print(choice)
@@ -303,10 +302,6 @@ while True:
         pass
     elif choice == 3:
         pass
-    elif choice == 4:
-        print("Cards in player deck: ", len(fightDeck))
-        print("Cards in hazard deck: ", len(hazardsDeck))
-        print("Cards in discards deck: ", len(fightDeckDiscards))
     elif choice == 5:
         pass
     else:

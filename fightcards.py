@@ -135,8 +135,6 @@ def createFightCardsDeck():
 
 # Allows a vision card to reorganize top 3 cards of deck
 def useVision(fightDeck, fightCard):
-    if fightCard.isTapped() == True:
-        print("Card already used")
     temp = []
     for i in range(0, 3):
         temp.append(drawFightCard(fightDeck))
