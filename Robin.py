@@ -18,6 +18,7 @@ missionList = []
 hazardDiscards = []
 fightDeckDiscards = []
 lifePoints = 20
+isPhased = False
 # Functions
 
 
@@ -56,13 +57,13 @@ def clearMissionList(life):
             break;
         elif choice2 == 0:
             counter = counter - 1
-        elif choice2 >= 1 or choice2 < len(missionList):
+        elif choice2 >= 1 and choice2 <= len(missionList):
             missionList.pop(choice2 - 1)
             counter = counter - 1
         else:
             print("Please enter a valid number")
     for i in missionList:
-        discardPile.append(i)
+        fightDeckDiscards.append(i)
     missionList.clear()
 
 
@@ -130,8 +131,7 @@ def hasLost():
 
 #Handles main game process
 def startMission(hazardCard):
-    global fightDeck, fightDeckDiscards, missionList
-    # if Available draws is negative, subtract from life calc
+    global fightDeck, fightDeckDiscards, missionList, isPhased
     availableDraws = 0
     damageNeeded = 0
 
@@ -161,6 +161,9 @@ def startMission(hazardCard):
                 if availableDraws < 0:
                     removeLife(abs(availableDraws) - 1)
                 # Win Condition gives user a card
+                if isPhased:
+                    hazardCard.increaseAlert()
+                unTapMission()
                 convertHazardCard(hazardCard)
                 clearMissionList(damageNeeded)
                 missionList.clear()
@@ -171,14 +174,16 @@ def startMission(hazardCard):
                 if availableDraws < 0:
                     damageNeeded = damageNeeded + abs(availableDraws)
                 removeLife(damageNeeded)
+                if isPhased:
+                    hazardCard.increaseAlert()
+                unTapMission()
                 clearMissionList(damageNeeded)
                 missionList.clear()
                 print(lifePoints)
                 break
         #Fight option of using an ability
         elif choice == 3:
-            useAbility(fightDeck,hazardCard)
-            break;
+            useAbility(hazardCard)
         else:
             print("oops")
 
@@ -203,8 +208,6 @@ def startHazard():
     else:
         drawHazardCard()
         startMission(drawHazardCard())
-        # NEEDS FUNCTION TO USE ABILITY CARDS
-        # TO DO - FUNCTION RETURNS LIFE, LIFE FUNCTION TAKES AS INPUT TO DECREASE LIFE IF GREATER THAN 0
 
 #Creates the 10 unique Aging cards
 def createAgeDeck():
@@ -242,57 +245,82 @@ def createAgingDeck():
     pass
     #
 
-
-# Add card back into it's respective deck
-def addCard(deck):
-    pass
-    #
-
-
-def unTapMission(missionList):
+def unTapMission():
+    global missionList
     for i in missionList:
         i.unTapCard()
-
+#Needs to be tested
 # Allows a vision card to reorganize top 3 cards of deck
 def useVision():
     global fightDeck
-    temp = []
+    fightDeck = []
     for i in range(0, 3):
-        temp.append(drawFightCard())
-        displayFightCard(temp[i])
+        fightDeck.append(drawFightCard())
+        displayFightCard(fightDeck[i])
     choice1 = int(input("Enter the first card you want to see in deck"))
-    temp.insert(0, temp.pop(choice1 - 1))
+    fightDeck.insert(0, fightDeck.pop(choice1 - 1))
     for i in range(0, 3):
-        displayFightCard(temp[i])
+        displayFightCard(fightDeck[i])
     choice2 = int(input("Enter the second card you want to see in deck"))
-    temp.insert(1, temp.pop(choice2 - 1))
+    fightDeck.insert(1, fightDeck.pop(choice2 - 1))
     for i in range(0, 3):
-        displayFightCard(temp[i])
+        displayFightCard(fightDeck[i])
     choice3 = int(input("Enter the third card you want to see in deck"))
-    temp.insert(2, temp.pop(choice3 - 1))
-    for j in range(0, len(fightDeck)):
-        temp.append(drawFightCard())
+    fightDeck.insert(2, fightDeck.pop(choice3 - 1))
+#    for j in range(0, len(fightDeck)):
+#        fightDeck.append(drawFightCard())
     for i in range(0, 3):
-        displayFightCard(temp[i])
-    return temp
+        displayFightCard(fightDeck[i])
 
+# Destroys card during a mission
+def useRealization():
+    global missionList
+    displayMissionList(missionList)
+    choice = int(input("Choose card to delete"))
+    missionList.pop(choice - 1)
 
+#Use draws to cards and adds to missionList
+def useEquipment():
+    global missionList
+    missionList.append(drawFightCard())
+    missionList.append(drawFightCard())
+
+#Given hazard card, reduces phase -1 until missionClear is called
+def usePhase(hazardCard):
+    global hazardsDeck
+    hazardCard.decreaseAlert()
+
+#Doubles fightScore of highest Card
+def doubleFight():
+    pass
+#Remove card from MissionList, Add new card into missionList to replace it
+#MUST TEST
+def exchange():
+    global missionList, fightDeckDiscards
+    missionList.append(drawFightCard())
+    fightDeckDiscards.pop()
 # Calls other Ability functions defined based on name of ability
-def useAbility(abilityCard, hazardCard):
+def useAbility(hazardCard):
     global missionList, fightDeck
     choice = int(input("Which card do you want to use"))
     if missionList[choice - 1].isTapped():
         print(missionList[choice-1].ability)
         print("Card already tapped")
     else:
+        missionList[choice - 1].tapCard()
         if missionList[choice - 1].ability == "Vision":
-            useVision(fightDeck)
+            useVision()
             missionList[choice-1].tapCard()
+        elif missionList[choice - 1].ability == "Realization":
+            useRealization()
+        elif missionList[choice - 1].ability == "Equipment":
+            useEquipment()
         elif missionList[choice - 1].ability == "Mimicry":
             pass
         elif missionList[choice - 1].ability == "Phase":
-            pass
-
+            usePhase(hazardCard)
+        else:
+            print("Does not have ability")
 
 # print("Friday is a game about understanding chance and probability of cards to optimize your chances of survival")
 # print("Robinson Crusoe has been stranded on an island for weeks, help guide him against the trecherous hazards")

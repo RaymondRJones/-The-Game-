@@ -1,5 +1,4 @@
-import random
-from hazards import *
+
 """
 Contains classes and methods that the fight cards must use.
 Involves creating all the deck of cards and having cards with various abilities
@@ -141,14 +140,7 @@ class Vision(FightCard):
         super().__init__(name, fightScore, ability)
 
 
-# Destroys card during a mission
-def useRealization(missionList, fightCard):
-    if fightCard.isTapped() == True:
-        print("Card already used")
-    displayMissionList(missionList)
-    choice = int(input("Choose card to delete"))
-    fightCard.tapCard()
-    missionList.pop(choice - 1)
+
 
 
 # Allows card to mimic, AKA, take ability until mission ends
